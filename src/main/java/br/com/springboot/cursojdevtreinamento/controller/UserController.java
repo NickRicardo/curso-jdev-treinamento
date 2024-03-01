@@ -5,7 +5,10 @@ import br.com.springboot.cursojdevtreinamento.model.UsuarioModel;
 import br.com.springboot.cursojdevtreinamento.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author nicolas.santos
@@ -19,18 +22,35 @@ public class UserController {
 
     @RequestMapping(value = "/mostrarnome/{name}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    public String usuarioText(@PathVariable String name){
+    public String usuarioText(@PathVariable String name) {
         return "Curso Spring Boot API" + name + "!";
     }
 
     @RequestMapping(value = "/olamundo/{nome}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    public String retornaOlaMundo(@PathVariable String nome){
+    public String retornaOlaMundo(@PathVariable String nome) {
 
         UsuarioModel usuario = new UsuarioModel();
         usuario.setNome(nome);
         usuarioRepository.save(usuario);//Este save vai gravar no banco de dados
 
         return "Olá Mundo " + nome;
+    }
+
+    @GetMapping(value = "listatodos") /*Primeiro metodo de API*/
+    @ResponseBody
+    public ResponseEntity<List<UsuarioModel>> listaUsuario() {
+        List<UsuarioModel> usuarios = usuarioRepository.findAll(); /*Executa a consulta no banco de dados*/
+
+        return new ResponseEntity<List<UsuarioModel>>(usuarios, HttpStatus.OK); /*Retorna a lista em JSON*/
+    }
+
+    @PostMapping (value = "salvar") /* Mapeia a URL*/
+    @ResponseBody /*Descrição da resposta */
+    public ResponseEntity<UsuarioModel> salvar(@RequestBody UsuarioModel usuarioModel){ //Recebe os dados para salvar
+
+        UsuarioModel user = usuarioRepository.save(usuarioModel);
+
+        return new ResponseEntity<>()
     }
 }
