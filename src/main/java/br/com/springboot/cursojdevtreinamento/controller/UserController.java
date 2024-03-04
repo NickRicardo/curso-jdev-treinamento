@@ -40,6 +40,7 @@ public class UserController {
     @GetMapping(value = "listatodos") /*Primeiro metodo de API*/
     @ResponseBody
     public ResponseEntity<List<UsuarioModel>> listaUsuario() {
+
         List<UsuarioModel> usuarios = usuarioRepository.findAll(); /*Executa a consulta no banco de dados*/
 
         return new ResponseEntity<List<UsuarioModel>>(usuarios, HttpStatus.OK); /*Retorna a lista em JSON*/
@@ -51,6 +52,26 @@ public class UserController {
 
         UsuarioModel user = usuarioRepository.save(usuarioModel);
 
-        return new ResponseEntity<>()
+        return new ResponseEntity<UsuarioModel>(user, HttpStatus.CREATED);
     }
+
+    @DeleteMapping (value = "delete") /* Mapeia a URL*/
+    @ResponseBody /*Descrição da resposta */
+    public ResponseEntity<String> delete(@RequestParam Long idUser){ //Recebe os dados para delete
+
+       usuarioRepository.deleteById(idUser);
+
+        return new ResponseEntity<String>("Usuário Deletado com Sucesso!", HttpStatus.OK);
+    }
+
+    @GetMapping (value = "buscarid") /* Mapeia a URL*/
+    @ResponseBody /*Descrição da resposta */
+    public ResponseEntity<UsuarioModel> buscarid(@RequestParam Long idUser){ //Recebe os dados para consultar
+
+        UsuarioModel usuario = usuarioRepository.findById(idUser).get();
+
+        return new ResponseEntity<UsuarioModel>(usuario, HttpStatus.OK);
+    }
+
+
 }
