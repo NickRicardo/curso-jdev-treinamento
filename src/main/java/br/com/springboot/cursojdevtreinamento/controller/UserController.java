@@ -73,5 +73,17 @@ public class UserController {
         return new ResponseEntity<UsuarioModel>(usuario, HttpStatus.OK);
     }
 
+    @PutMapping(value = "atualizar")
+    @ResponseBody
+    public ResponseEntity<?> atualizar(@RequestBody  UsuarioModel usurio){
+
+        if (usurio.getId() == null){ /*Fazendo a validação para ID = nullo ou vazio */
+            return new ResponseEntity<String>("O ID não foi informado para a atualização.", HttpStatus.OK);
+        }
+
+        UsuarioModel usuario = usuarioRepository.saveAndFlush(usurio);
+
+        return new ResponseEntity<UsuarioModel>(usuario, HttpStatus.OK);
+    }
 
 }
